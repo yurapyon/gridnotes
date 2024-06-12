@@ -3,12 +3,18 @@ import DiscordProvider from "next-auth/providers/discord";
 import prisma from "./db/prisma";
 import { Adapter } from "next-auth/adapters";
 import { DefaultSession, NextAuthOptions } from "next-auth";
+import { UserRole } from "@prisma/client";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      role: UserRole;
     } & DefaultSession["user"];
+  }
+
+  interface User {
+    role: UserRole;
   }
 }
 
@@ -19,6 +25,7 @@ export const authOptions: NextAuthOptions = {
       user: {
         ...session.user,
         id: user.id,
+        role: user.role,
       },
     }),
   },

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import prisma from "../db/prisma";
 import superjson from "superjson";
+import { UserRole } from "@prisma/client";
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await getServerSession(authOptions);
@@ -22,6 +23,9 @@ export const publicProcedure = t.procedure;
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  if (ctx.session.user.role !== "ADMIN") {
+    throw new TRPCError({ code: "FORBIDDEN" });
   }
   return next({
     ctx: {

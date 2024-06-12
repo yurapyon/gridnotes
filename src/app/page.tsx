@@ -1,22 +1,22 @@
-import { Xyz } from "@/components/subcomponent";
-import { authOptions } from "@/server/auth";
-import { getServerSession } from "next-auth";
-import Link from "next/link";
+"use client";
 
-export default async function Home() {
-  const session = await getServerSession(authOptions);
+import { Page } from "@/components/ui/Page";
+import { PagesBar } from "@/components/ui/PagesBar";
+import { useState } from "react";
+
+export default function Home() {
+  const [selectedPageId, setSelectedPageId] = useState<string | null>(null);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Xyz />
-      <p className="text-center text-2xl text-white">
-        {session && <span>Logged in as {session.user?.name}</span>}
-      </p>
-      <Link
-        href={session ? "/api/auth/signout" : "/api/auth/signin"}
-        className=""
-      >
-        {session ? "Sign out" : "Sign in"}
-      </Link>
+    <main className="w-screen h-screen font-mono bg-slate-300">
+      <div className="flex flex-col">
+        <PagesBar
+          selectedPageId={selectedPageId}
+          setSelectedPageId={setSelectedPageId}
+        />
+        {selectedPageId && (
+          <Page className="grow min-h-0" selectedPageId={selectedPageId} />
+        )}
+      </div>
     </main>
   );
 }

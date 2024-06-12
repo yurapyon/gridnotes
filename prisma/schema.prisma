@@ -8,27 +8,46 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model Project {
+  id    String @id @default(cuid())
+  name  String
+  pages Page[]
+}
+
 model Page {
   id        String     @id @default(cuid())
+
+  name      String
+
   textAreas TextArea[]
+
+  project   Project    @relation(fields: [projectId], references: [id])
+  projectId String
   user      User       @relation(fields: [userId], references: [id])
   userId    String
 }
 
 model TextArea {
   id         String   @id @default(cuid())
-  text       String
+
+  text       String?
   x          Int
   y          Int
   width      Int
   height     Int
-  color      String
+  color      String?
   categories String[]
+
   page       Page     @relation(fields: [pageId], references: [id])
   pageId     String
 }
 
 // === auth ===
+
+enum UserRole {
+  ADMIN
+  NOT_ADMIN
+}
 
 model User {
   id            String          @id @default(cuid())
@@ -39,6 +58,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
+  role          UserRole         @default(NOT_ADMIN)
   pages         Page[]
  
   createdAt DateTime @default(now())
