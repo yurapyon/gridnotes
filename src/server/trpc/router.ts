@@ -3,17 +3,10 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "@/server/trpc/trpc";
-
-// import { todoRouter } from "./routes/todo";
+import { pageRouter } from "./routers/page-router";
 
 export const appRouter = router({
-  healthcheck: publicProcedure.query(({ ctx, input }) => {
-    return "OK";
-  }),
-  testing: protectedProcedure.query(({ ctx, input }) => {
-    return ctx.session.user.name;
-  }),
-  // todos: todoRouter,
+  pages: pageRouter,
 });
 
 export type AppRouter = typeof appRouter;
