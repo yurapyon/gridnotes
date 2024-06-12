@@ -44,7 +44,7 @@ export const PagesBar: React.FC<{
       })}
       <button
         // TODO
-        className="bg-black px-[1ch]"
+        className="text-white bg-black px-[1ch]"
         onClick={() => {
           createPageMutation.mutate({
             userId: session.user.id,

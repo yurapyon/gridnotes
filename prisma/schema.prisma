@@ -19,7 +19,8 @@ model Page {
 
   name      String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  // TODO
+  // updatedAt DateTime @updatedAt
 
   textAreas TextArea[]
 
