@@ -1,8 +1,4 @@
-import {
-  router,
-  publicProcedure,
-  protectedProcedure,
-} from "@/server/trpc/trpc";
+import { router } from "@/server/trpc/trpc";
 import { pageRouter } from "./routers/page-router";
 
 export const appRouter = router({
