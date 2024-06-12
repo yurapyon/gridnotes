@@ -1,13 +1,13 @@
 import { trpc } from "@/lib/trpc/trpc-client";
 
-export const Page: React.FC<{ selectedPageId: string; className?: string }> = ({
-  selectedPageId,
-  className = "",
-}) => {
+export const Page: React.FC<{
+  selectedPageId: string | null;
+  className?: string;
+}> = ({ selectedPageId, className = "" }) => {
   const { data: pages } = trpc.pages.getPages.useQuery();
   const currentPage = pages?.find((page) => page.id === selectedPageId);
 
-  if (!currentPage) return;
+  if (!selectedPageId || !currentPage) return <div className={className} />;
 
   return (
     <div className={["relative", className].join(" ")}>
