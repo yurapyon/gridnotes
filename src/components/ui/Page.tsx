@@ -18,8 +18,8 @@ export const Page: React.FC<{ selectedPageId: string; className?: string }> = ({
             key={textArea.id}
             className="absolute flex flex-col text-black"
             style={{
-              top: textArea.y + "ch",
-              left: textArea.x + "em",
+              top: textArea.y + "em",
+              left: textArea.x + "ch",
               width: textArea.width + "ch",
             }}
           >
