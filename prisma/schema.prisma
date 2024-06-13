@@ -2,47 +2,51 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
+// === app ===
+
 model Project {
-  id    String @id @default(cuid())
-  name  String
-  pages Page[]
+  id                  String @id @default(cuid())
+  name                String
+  notes               Note[]
+  /// [View]
+  views               Json[]
+  /// [CategoryDefinition]
+  categoryDefinitions Json[]
+
+  user                User   @relation(fields: [userId], references: [id])
+  userId              String
 }
 
-model Page {
-  id        String     @id @default(cuid())
-
-  name      String
-  createdAt DateTime @default(now())
-  // TODO
-  // updatedAt DateTime @updatedAt
-
-  textAreas TextArea[]
-
-  project   Project    @relation(fields: [projectId], references: [id])
-  projectId String
-  user      User       @relation(fields: [userId], references: [id])
-  userId    String
+enum NoteStatus {
+  Backlog
+  Later
+  UpNext
+  InProgress
+  Finished
 }
 
-model TextArea {
-  id         String   @id @default(cuid())
+model Note {
+  id          String      @id @default(cuid())
+  status      NoteStatus?
+  createdAt   DateTime    @default(now())
+  completedAt DateTime?
+  text        String?
+  /// [Category]
+  categories  Json[]
+  tags        String[]
 
-  text       String?
-  x          Int
-  y          Int
-  width      Int
-  height     Int
-  color      String?
-  categories String[]
-
-  page       Page     @relation(fields: [pageId], references: [id])
-  pageId     String
+  project     Project     @relation(fields: [projectId], references: [id])
+  projectId   String
 }
 
 // === auth ===
@@ -62,7 +66,7 @@ model User {
   sessions      Session[]
 
   role          UserRole         @default(NOT_ADMIN)
-  pages         Page[]
+  projects      Project[]
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
