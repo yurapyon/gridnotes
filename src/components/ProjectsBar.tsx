@@ -1,12 +1,14 @@
 import { trpc } from "@/lib/trpc/trpc-client";
-import { useSession } from "next-auth/react";
 import { Dispatch, SetStateAction, useState } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export const ProjectsBar: React.FC<{
   selectedProjectId: string | null;
   setSelectedProjectId: Dispatch<SetStateAction<string | null>>;
   className?: string;
 }> = ({ selectedProjectId, setSelectedProjectId, className = "" }) => {
+  const { data: session } = useSession();
+
   const { data: projectMenuOptions } = trpc.projects.getMenuOptions.useQuery();
 
   const currentProjectMenuOption = projectMenuOptions?.find(
@@ -44,6 +46,12 @@ export const ProjectsBar: React.FC<{
           </div>
         )}
       </div>
+      <div className="grow" />
+      {!session ? (
+        <button onClick={() => signIn("discord")}>sign in</button>
+      ) : (
+        <button onClick={() => signOut()}>sign out</button>
+      )}
     </div>
   );
 };
