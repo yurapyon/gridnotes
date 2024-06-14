@@ -2,13 +2,16 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
 export const projectRouter = router({
-  getById: protectedProcedure
+  getByIdWithNotes: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.project.findUnique({
         where: {
           userId: ctx.session.user.id,
           id: input.id,
+        },
+        include: {
+          notes: true,
         },
       });
     }),

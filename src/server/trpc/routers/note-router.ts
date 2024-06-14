@@ -7,12 +7,14 @@ export const noteRouter = router({
     .input(
       z.object({
         projectId: z.string(),
+        status: z.optional(z.string()),
       })
     )
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.note.create({
         data: {
           projectId: input.projectId,
+          status: input.status as NoteStatus,
         },
       });
     }),

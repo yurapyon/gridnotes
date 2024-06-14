@@ -44,6 +44,8 @@ model Note {
   /// [Category]
   categories  Json[]
   tags        String[]
+  index       Int         @default(-1)
+  minimized   Boolean     @default(false)
 
   project     Project     @relation(fields: [projectId], references: [id])
   projectId   String
