@@ -9,7 +9,7 @@ export default function Home() {
     null
   );
   return (
-    <main className="w-screen h-screen font-mono bg-slate-300 text-black">
+    <main className="w-screen h-screen font-mono bg-white text-black">
       <div className="flex flex-col w-full h-full">
         <div className="grow min-h-0">
           {selectedProjectId && (

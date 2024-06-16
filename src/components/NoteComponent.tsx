@@ -1,22 +1,34 @@
+import { TextBuffer, TextEditor } from "@/lib/text-editor/TextEditor";
 import { Note } from "@prisma/client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
+import { useEditorStore } from "./providers/EditorStoreProvider";
 
-export const NoteComponent: React.FC<{ note: Note; className?: string }> = ({
-  note,
-  className = "",
-}) => {
-  const [localText, setLocalText] = useState(note.text || "");
-  const lines = localText.split("\n");
+export const NoteComponent: React.FC<{
+  note: Note;
+  textEditor: TextEditor;
+  className?: string;
+}> = ({ note, textEditor, className = "" }) => {
+  const textBuffer = useEditorStore((state) => state.textBuffers.get(note.id));
+  const editing = useEditorStore((state) => state.focusedNoteId === note.id);
+  const focusNote = useEditorStore((state) => state.focusNote);
+  const updateTextBuffer = useEditorStore((state) => state.updateTextBuffer);
+
   return (
-    <div className={["w-full bg-blue-100", className].join(" ")}>
-      <textarea
-        className="w-full bg-transparent outline-none block"
-        style={{ resize: "none", height: lines.length * 1.5 + "em" }}
-        value={localText}
-        onChange={(e) => {
-          setLocalText(e.target.value);
-        }}
-      />
+    <div
+      tabIndex={0}
+      className="bg-gray-300 min-h-[6em]"
+      onFocus={() => focusNote(note.id)}
+      onKeyDown={(e) => {
+        if (editing) {
+          textEditor.onKeyDown(e);
+        }
+      }}
+      onClick={() => updateTextBuffer(note.id)}
+    >
+      {textBuffer &&
+        textBuffer.lines.map((line, i) => {
+          return <div key={i}>{line}</div>;
+        })}
     </div>
   );
 };
